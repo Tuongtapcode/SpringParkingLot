@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/ParkingLot"/>
+<Context path="/ParkingLot">
+  <Resource auth="Container" driverClassName="com.mysql.cj.jdbc.Driver" maxActive="20" maxIdle="10" maxWait="-1" name="com.nnt.pojo" password="Admin@123" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/parkinglotdb?zeroDateTimeBehavior=CONVERT_TO_NULL" username="root"/>
+</Context>

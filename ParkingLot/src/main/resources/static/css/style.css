@@ -1,0 +1,134 @@
+.sidebar {
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    z-index: 1000;
+}
+
+.nav-link {
+    color: white !important;
+    border-radius: 10px;
+    margin: 5px 0;
+    transition: all 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.main-content {
+    margin-left: 250px;
+}
+
+
+/* 
+
+
+
+
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.status-badge {
+    font-size: 0.8em;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.status-available {
+    background: #28a745;
+    color: white;
+}
+
+.status-booked {
+    background: #ffc107;
+    color: #000;
+}
+
+.status-occupied {
+    background: #dc3545;
+    color: white;
+}
+
+.status-blocked {
+    background: #6c757d;
+    color: white;
+}
+
+.parking-space {
+    width: 60px;
+    height: 40px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.parking-space:hover {
+    transform: scale(1.1);
+}
+
+.space-available {
+    background: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.space-booked {
+    background: #fff3cd;
+    border-color: #ffc107;
+    color: #856404;
+}
+
+.space-occupied {
+    background: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+.space-blocked {
+    background: #e2e3e5;
+    border-color: #6c757d;
+    color: #495057;
+}
+
+.stats-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.table-responsive {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.btn-custom {
+    border-radius: 25px;
+    padding: 10px 20px;
+    transition: all 0.3s;
+}
+
+.btn-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+} */
