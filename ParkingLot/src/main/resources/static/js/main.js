@@ -1,18 +1,78 @@
+function deleteParkingLot(endpoint) {
+  if (confirm("Bạn có chắc chắn muốn xóa bãi đỗ xe này?")) {
+    // API call to delete parking lot
+    fetch(endpoint, {
+      method: "DELETE",
+    }).then((response) => {
+      if (response.status === 204) {
+        alert("Đã xóa bãi đỗ xe thành công!");
+        location.reload();
+      } else {
+        alert("Xóa bãi đỗ xe thất bại!");
+      }
+    });
+  }
+}
+
+function deleteParkingSpace(endpoint) {
+  if (confirm("Bạn có chắc chắn muốn xóa bãi đỗ xe này?")) {
+    // API call to delete parking lot
+    fetch(endpoint, {
+      method: "DELETE",
+    }).then((response) => {
+      if (response.status === 204) {
+        alert("Đã xóa bãi đỗ xe thành công!");
+        location.reload();
+      } else {
+        alert("Xóa bãi đỗ xe thất bại!");
+      }
+    });
+  }
+}
+
+// Delete Extension
+let currentDeleteEndpoint = "/ParkingLot/api/extensions/";
+// Hiển thị modal xác nhận xóa
+function showDeleteModal(id, extensionName) {
+  console.log("Showing delete modal for:", id);
+  currentDeleteEndpoint += id;
+  document.getElementById("extensionName").textContent = extensionName;
+  const deleteModal = new bootstrap.Modal(
+    document.getElementById("deleteModal")
+  );
+  deleteModal.show();
+}
+function deleteExtension(endpoint = currentDeleteEndpoint) {
+  console.log("Deleting extension at endpoint:", endpoint);
+  if (confirm("Bạn có chắc chắn muốn xóa tiện ích này?")) {
+    // API call to delete extension
+    fetch(endpoint, {
+      method: "DELETE",
+    }).then((response) => {
+      if (response.status === 204) {
+        alert("Đã xóa tiện ích thành công!");
+        location.reload();
+      } else {
+        alert("Xóa tiện ích thất bại!");
+      }
+    });
+  }
+}
+
 // Navigation
-function showSection(sectionId) {
-  // Hide all sections
-  document.querySelectorAll(".section").forEach((section) => {
-    section.style.display = "none";
-  });
+function showActiveNavLink(event) {
+  if (!event) return;
 
-  // Show selected section
-  document.getElementById(sectionId).style.display = "block";
+  const clickedNavLink = event.target.closest(".nav-link");
+  if (!clickedNavLink) return;
 
-  // Update active nav link
+  // Remove active from all
   document.querySelectorAll(".nav-link").forEach((link) => {
     link.classList.remove("active");
   });
-  event.target.classList.add("active");
+
+  // Add active to clicked
+  clickedNavLink.classList.add("active");
 }
 // Parking Lot Management
 function showAddParkingLotModal() {
@@ -22,34 +82,26 @@ function showAddParkingLotModal() {
   new bootstrap.Modal(document.getElementById("parkingLotModal")).show();
 }
 
-function editParkingLot(id) {
+function editParkingLot(name) {
   // Load parking lot data and populate form
+  console.log("Dữ liệu bãi xe:", name);
   document.querySelector("#parkingLotModal .modal-title").textContent =
-    "Sửa Bãi đỗ xe";
+    //   "Sửa Bãi đỗ xe";
 
-  // Sample data loading (replace with actual API call)
-  if (id === 1) {
-    document.getElementById("lotName").value = "Bãi đỗ Trung tâm";
-    document.getElementById("address").value = "123 Nguyễn Huệ, Q1";
-    document.getElementById("totalSlots").value = 50;
-    document.getElementById("pricePerHour").value = 15000;
-    document.getElementById("description").value =
-      "Bãi đỗ xe hiện đại tại trung tâm thành phố";
-    document.getElementById("isActive").value = "true";
-    document.getElementById("wifi").checked = true;
-    document.getElementById("security").checked = true;
-  }
+    // // Sample data loading (replace with actual API call)
+    // if (id === 1) {
+    //   document.getElementById("lotName").value = "Bãi đỗ Trung tâm";
+    //   document.getElementById("address").value = "123 Nguyễn Huệ, Q1";
+    //   document.getElementById("totalSlots").value = 50;
+    //   document.getElementById("pricePerHour").value = 15000;
+    //   document.getElementById("description").value =
+    //     "Bãi đỗ xe hiện đại tại trung tâm thành phố";
+    //   document.getElementById("isActive").value = "true";
+    //   // document.getElementById("wifi").checked = true;
+    //   // document.getElementById("security").checked = true;
+    // }
 
-  new bootstrap.Modal(document.getElementById("parkingLotModal")).show();
-}
-
-function deleteParkingLot(id) {
-  if (confirm("Bạn có chắc chắn muốn xóa bãi đỗ xe này?")) {
-    // API call to delete parking lot
-    console.log("Deleting parking lot with ID:", id);
-    // Refresh table after deletion
-    alert("Đã xóa bãi đỗ xe thành công!");
-  }
+    new bootstrap.Modal(document.getElementById("parkingLotModal")).show();
 }
 
 function saveParkingLot() {
@@ -173,13 +225,6 @@ function editExtension(id) {
 
   document.getElementById("extensionName").value = extensions[id];
   new bootstrap.Modal(document.getElementById("extensionModal")).show();
-}
-
-function deleteExtension(id) {
-  if (confirm("Bạn có chắc chắn muốn xóa tiện ích này?")) {
-    console.log("Deleting extension with ID:", id);
-    alert("Đã xóa tiện ích thành công!");
-  }
 }
 
 function saveExtension() {

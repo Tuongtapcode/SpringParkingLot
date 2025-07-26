@@ -30,13 +30,14 @@
                 <a th:href="@{/parkinglots}" th:class="'nav-link ' + (${activePage} == 'parkinglots' ? 'active' : '')">
                     <i class="fas fa-building me-2"></i> Quản lý Bãi đỗ
                 </a>
-                <a href="#parking-spaces" class="nav-link" onclick="showSection('parking-spaces')">
+                <a th:href="@{/parkingspaces}"
+                    th:class="'nav-link ' + (${activePage} == 'parkingspaces' ? 'active' : '')">
                     <i class="fas fa-th me-2"></i> Quản lý Chỗ đỗ
                 </a>
-                <a href="#extensions" class="nav-link" onclick="showSection('extensions')">
+                <a th:href="@{/extensions}" th:class="'nav-link ' + (${activePage} == 'extensions' ? 'active' : '')">
                     <i class="fas fa-puzzle-piece me-2"></i> Tiện ích
                 </a>
-                <a href="#reports" class="nav-link" onclick="showSection('reports')">
+                <a th:href="@{/stats}" th:class="'nav-link ' + (${activePage} == 'stats' ? 'active' : '')">
                     <i class="fas fa-chart-bar me-2"></i> Báo cáo
                 </a>
             </nav>

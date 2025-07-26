@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị Bãi Đỗ Xe</title>
+    <th:context th:replace="base :: resources">
+
+    </th:context>
+
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div th:replace="base :: sidebar"></div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Navbar -->
+        <div th:replace="base :: navbar"></div>
+        <!-- Dashboard Section -->
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header text-center">
+                            <h3 class="mb-0">
+                                <i class="fas fa-parking me-2"></i>
+                                Quản lý chỗ đỗ xe
+                                <pre th:text="${parkingspace}">[DEBUG: parkingspace]</pre>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/parkingspaces}" method="post" th:object="${parkingspace}">
+                                <!-- Thông tin cơ bản -->
+                                <div class="form-section">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        Thông tin cơ bản
+                                    </h5>
+
+                                    <div class="mb-3">
+                                        <label for="address" class="form-label">Tên<span
+                                                class="text-danger">*</span></label>
+                                        <input th:field="*{name}" type="text" class="form-control" id="name" name="name"
+                                            required maxlength="200">
+                                    </div>
+
+
+                                    <div class="mb-3">
+                                        <label for="parkingLotId" class="form-label">Bãi đỗ xe <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select" th:field="*{parkingLotId.id}">
+                                            <!-- Spring sẽ tự tạo một ParkingLot mới → gán id vào → xong, không cần Formatter.-->
+                                            <option th:each="p: ${parkinglots}" th:value="${p.id}" th:text="${p.name}">
+                                            </option>
+                                        </select>
+                                        <!-- <select class="form-select"
+                                            th:field="*{parkingLotId}" id="ParkingLot">
+                                            <option th:each="p: ${parkinglots}" th:value="${p.id}" th:text="${p.name}">
+                                            </option>
+                                        </select> -->
+                                    </div>
+                                </div>
+
+                                <!-- Thông tin vận hành -->
+                                <div class="form-section">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-cogs me-2"></i>
+                                        Thông tin vận hành
+                                    </h5>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="status" class="form-label">Trạng thái <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" id="status" name="status"
+                                                    th:field="*{status}">
+                                                    <option value="AVAILABLE" selected>
+                                                        <span>Có thể sử dụng (AVAILABLE)</span>
+                                                    </option>
+                                                    <option value="BLOCKED">
+                                                        <span>Bảo trì (BLOCKED)</span>
+                                                    </option>
+                                                    <option value="OCCUPIED">
+                                                        <span>Đang sử dụng (OCCUPIED)</span>
+                                                    </option>
+                                                    <option value="BOOKED">
+                                                        <span>Đã đặt trước(BOOKED)</span>
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="vehicle_type" class="form-label">Loại phương tiện <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" id="vehicle_type" name="vehicle_type">
+                                                    <!-- <select class="form-select" id="vehicle_type" name="vehicle_type" th:field="*{vehicleType}"></select> -->
+                                                    <option value="CAR" selected>Ô tô</option>
+                                                    <option value="MOTO">Xe máy</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="mb-3">
+                                        <label for="is_active" class="form-label">Trạng thái hoạt động</label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="is_active"
+                                                th:field="*{isActive}" th:checked="${isActive == 1}" checked>
+                                            <label class="form-check-label" for="is_active">
+                                                <span id="status-text">Đang hoạt động</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Thông tin thời gian -->
+                                <div class="form-section">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-clock me-2"></i>
+                                        Thông tin thời gian
+                                    </h5>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="created_at" class="form-label">Ngày tạo</label>
+                                                <input th:value="${parkingspace.createdAt}" type="datetime-local"
+                                                    class="form-control readonly-field" id="created_at"
+                                                    name="created_at" readonly disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="updated_at" class="form-label">Cập nhật lần cuối</label>
+                                                <input th:value="${parkingspace.updatedAt}" type="datetime-local"
+                                                    class="form-control readonly-field" id="updated_at"
+                                                    name="updated_at" readonly disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" th:field="*{id}" />
+                                <!-- Nút hành động -->
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg me-2">
+
+
+                                        <span th:if="${parkingspace.id == null}">
+                                            <i class="fas fa-plus me-2"></i>
+                                            Thêm bãi đỗ</span>
+                                        <span th:if="${parkingspace.id != null}">
+                                            <i class="fas fa-save me-2"></i>
+                                            Cập nhật bãi đỗ</span>
+
+                                    </button>
+
+                                    <button type="reset" class="btn btn-outline-danger btn-lg">
+                                        <i class="fas fa-undo me-2"></i>
+                                        Đặt lại
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast thông báo -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="successToast" class="toast" role="alert">
+            <div class="toast-header bg-success text-white">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong class="me-auto">Thành công</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                Dữ liệu đã được lưu thành công!
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

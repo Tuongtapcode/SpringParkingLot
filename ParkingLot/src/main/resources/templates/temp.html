@@ -1,304 +1,420 @@
+<!DOCTYPE html>
+<html lang="vi">
 
-<!-- Add/Edit Space Modal -->
-<div class="modal fade" id="spaceModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Thêm/Sửa Chỗ đỗ xe</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="spaceForm">
-                    <div class="mb-3">
-                        <label class="form-label">Tên chỗ đỗ</label>
-                        <input type="text" class="form-control" id="spaceName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Bãi đỗ</label>
-                        <select class="form-select" id="parkingLotId" required>
-                            <option value="">Chọn bãi đỗ</option>
-                            <option value="1">Bãi đỗ Trung tâm</option>
-                            <option value="2">Bãi đỗ Sân bay</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Trạng thái</label>
-                        <select class="form-select" id="spaceStatus">
-                            <option value="available">Trống</option>
-                            <option value="booked">Đã đặt</option>
-                            <option value="occupied">Đang sử dụng</option>
-                            <option value="blocked">Bảo trì</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="spaceActive" checked>
-                            <label class="form-check-label" for="spaceActive">Kích hoạt</label>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Chỗ Đỗ Xe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-content {
+            margin-left: 0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+
+        .form-section {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline-danger {
+            border: 2px solid #dc3545;
+            color: #dc3545;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            transform: translateY(-2px);
+        }
+
+        .text-primary {
+            color: #667eea !important;
+        }
+
+        .readonly-field {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+        }
+
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+
+        .badge {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+
+        .status-available {
+            background-color: #28a745;
+        }
+
+        .status-occupied {
+            background-color: #dc3545;
+        }
+
+        .status-maintenance {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .status-reserved {
+            background-color: #17a2b8;
+        }
+
+        .vehicle-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .toast-container {
+            z-index: 1050;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Simple Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-car me-2"></i>
+                Hệ Thống Quản Lý Bãi Đỗ Xe
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header text-center">
+                            <h3 class="mb-0">
+                                <i class="fas fa-parking me-2"></i>
+                                Quản lý chỗ đỗ xe
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <form action="/parking-spaces" method="post">
+                                <!-- Thông tin cơ bản -->
+                                <div class="form-section">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        Thông tin cơ bản
+                                    </h5>
+
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Tên chỗ đỗ <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="name" name="name" 
+                                               placeholder="Ví dụ: A-01, B-15, VIP-01..." required maxlength="100">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="parking_lot_id" class="form-label">Bãi đỗ xe <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="parking_lot_id" name="parking_lot_id" required>
+                                            <option value="">-- Chọn bãi đỗ xe --</option>
+                                            <option value="1">Bãi đỗ xe Trung tâm</option>
+                                            <option value="2">Bãi đỗ xe Quận 1</option>
+                                            <option value="3">Bãi đỗ xe Sân bay</option>
+                                            <option value="4">Bãi đỗ xe Thương mại</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Thông tin vận hành -->
+                                <div class="form-section">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-cogs me-2"></i>
+                                        Thông tin vận hành
+                                    </h5>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="status" class="form-label">Trạng thái <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="status" name="status" required>
+                                                    <option value="AVAILABLE" selected>
+                                                        <span class="badge status-available">Có thể sử dụng</span>
+                                                    </option>
+                                                    <option value="OCCUPIED">
+                                                        <span class="badge status-occupied">Đang sử dụng</span>
+                                                    </option>
+                                                    <option value="MAINTENANCE">
+                                                        <span class="badge status-maintenance">Bảo trì</span>
+                                                    </option>
+                                                    <option value="RESERVED">
+                                                        <span class="badge status-reserved">Đã đặt trước</span>
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="vehicle_type" class="form-label">Loại phương tiện <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="vehicle_type" name="vehicle_type" required>
+                                                    <option value="CAR" selected>
+                                                        <i class="fas fa-car"></i> Ô tô
+                                                    </option>
+                                                    <option value="MOTORCYCLE">
+                                                        <i class="fas fa-motorcycle"></i> Xe máy
+                                                    </option>
+                                                    <option value="TRUCK">
+                                                        <i class="fas fa-truck"></i> Xe tải
+                                                    </option>
+                                                    <option value="BICYCLE">
+                                                        <i class="fas fa-bicycle"></i> Xe đạp
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="is_active" class="form-label">Trạng thái hoạt động</label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="is_active" 
+                                                   name="is_active" checked>
+                                            <label class="form-check-label" for="is_active">
+                                                <span id="status-text">Đang hoạt động</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Preview thông tin -->
+                                <div class="form-section">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-eye me-2"></i>
+                                        Xem trước
+                                    </h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card border-0 bg-light">
+                                                <div class="card-body text-center">
+                                                    <h6 class="card-title">Trạng thái hiện tại</h6>
+                                                    <span id="preview-status" class="badge status-available">Có thể sử dụng</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card border-0 bg-light">
+                                                <div class="card-body text-center">
+                                                    <h6 class="card-title">Loại phương tiện</h6>
+                                                    <span id="preview-vehicle" class="vehicle-type-badge">
+                                                        <i class="fas fa-car"></i> Ô tô
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Thông tin thời gian -->
+                                <div class="form-section">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-clock me-2"></i>
+                                        Thông tin thời gian
+                                    </h5>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="created_at" class="form-label">Ngày tạo</label>
+                                                <input type="datetime-local" class="form-control readonly-field" 
+                                                       id="created_at" name="created_at" readonly disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="updated_at" class="form-label">Cập nhật lần cuối</label>
+                                                <input type="datetime-local" class="form-control readonly-field" 
+                                                       id="updated_at" name="updated_at" readonly disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Nút hành động -->
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg me-2">
+                                        <i class="fas fa-plus me-2"></i>
+                                        Thêm chỗ đỗ
+                                    </button>
+                                    <button type="reset" class="btn btn-outline-danger btn-lg">
+                                        <i class="fas fa-undo me-2"></i>
+                                        Đặt lại
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" onclick="saveSpace()">Lưu</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add/Edit Extension Modal -->
-<div class="modal fade" id="extensionModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Thêm/Sửa Tiện ích</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="extensionForm">
-                    <div class="mb-3">
-                        <label class="form-label">Tên tiện ích</label>
-                        <input type="text" class="form-control" id="extensionName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Hình ảnh</label>
-                        <input type="file" class="form-control" id="extensionImage" accept="image/*">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" onclick="saveExtension()">Lưu</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-<!-- Parking Spaces Management -->
-<div id="parking-spaces" class="section" style="display: none;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Quản lý Chỗ đỗ xe</h2>
-        <div>
-            <select class="form-select d-inline-block w-auto me-2" onchange="filterByParkingLot()">
-                <option value="">Chọn bãi đỗ</option>
-                <option value="1">Bãi đỗ Trung tâm</option>
-                <option value="2">Bãi đỗ Sân bay</option>
-            </select>
-            <button class="btn btn-primary btn-custom" onclick="showAddSpaceModal()">
-                <i class="fas fa-plus"></i> Thêm chỗ đỗ
-            </button>
-        </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5>Sơ đồ bãi đỗ - Bãi đỗ Trung tâm</h5>
-        </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-12">
-                    <div class="d-flex gap-3 mb-3">
-                        <div><span class="status-badge status-available">Trống</span></div>
-                        <div><span class="status-badge status-booked">Đã đặt</span></div>
-                        <div><span class="status-badge status-occupied">Đang sử dụng</span></div>
-                        <div><span class="status-badge status-blocked">Bảo trì</span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="parking-grid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="d-flex flex-wrap justify-content-start">
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'A01')">
-                                A01</div>
-                            <div class="parking-space space-occupied" onclick="changeSpaceStatus(this, 'A02')">
-                                A02</div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'A03')">
-                                A03</div>
-                            <div class="parking-space space-booked" onclick="changeSpaceStatus(this, 'A04')">A04
-                            </div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'A05')">
-                                A05</div>
-                            <div class="parking-space space-blocked" onclick="changeSpaceStatus(this, 'A06')">
-                                A06</div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'A07')">
-                                A07</div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'A08')">
-                                A08</div>
-                            <div class="parking-space space-occupied" onclick="changeSpaceStatus(this, 'A09')">
-                                A09</div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'A10')">
-                                A10</div>
-                        </div>
-                        <div class="d-flex flex-wrap justify-content-start mt-2">
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'B01')">
-                                B01</div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'B02')">
-                                B02</div>
-                            <div class="parking-space space-occupied" onclick="changeSpaceStatus(this, 'B03')">
-                                B03</div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'B04')">
-                                B04</div>
-                            <div class="parking-space space-booked" onclick="changeSpaceStatus(this, 'B05')">B05
-                            </div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'B06')">
-                                B06</div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'B07')">
-                                B07</div>
-                            <div class="parking-space space-blocked" onclick="changeSpaceStatus(this, 'B08')">
-                                B08</div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'B09')">
-                                B09</div>
-                            <div class="parking-space space-available" onclick="changeSpaceStatus(this, 'B10')">
-                                B10</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Tên chỗ đỗ</th>
-                            <th>Bãi đỗ</th>
-                            <th>Trạng thái</th>
-                            <th>Ngày tạo</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>A01</td>
-                            <td>Bãi đỗ Trung tâm</td>
-                            <td><span class="status-badge status-available">Trống</span></td>
-                            <td>2024-01-15</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning" onclick="editSpace(1)">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteSpace(1)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>A02</td>
-                            <td>Bãi đỗ Trung tâm</td>
-                            <td><span class="status-badge status-occupied">Đang sử dụng</span></td>
-                            <td>2024-01-15</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning" onclick="editSpace(2)">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteSpace(2)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <!-- Toast thông báo -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="successToast" class="toast" role="alert">
+            <div class="toast-header bg-success text-white">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong class="me-auto">Thành công</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                Dữ liệu đã được lưu thành công!
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Extensions Management -->
-<div id="extensions" class="section" style="display: none;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Quản lý Tiện ích</h2>
-        <button class="btn btn-primary btn-custom" onclick="showAddExtensionModal()">
-            <i class="fas fa-plus"></i> Thêm tiện ích
-        </button>
     </div>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Wifi">
-                <div class="card-body">
-                    <h5 class="card-title">Wifi miễn phí</h5>
-                    <p class="card-text">Kết nối internet tốc độ cao miễn phí</p>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-warning btn-sm" onclick="editExtension(1)">
-                            <i class="fas fa-edit"></i> Sửa
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteExtension(1)">
-                            <i class="fas fa-trash"></i> Xóa
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="CCTV">
-                <div class="card-body">
-                    <h5 class="card-title">Camera an ninh</h5>
-                    <p class="card-text">Hệ thống camera giám sát 24/7</p>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-warning btn-sm" onclick="editExtension(2)">
-                            <i class="fas fa-edit"></i> Sửa
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteExtension(2)">
-                            <i class="fas fa-trash"></i> Xóa
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Charging">
-                <div class="card-body">
-                    <h5 class="card-title">Sạc xe điện</h5>
-                    <p class="card-text">Trạm sạc xe điện nhanh</p>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-warning btn-sm" onclick="editExtension(3)">
-                            <i class="fas fa-edit"></i> Sửa
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteExtension(3)">
-                            <i class="fas fa-trash"></i> Xóa
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set current datetime for created_at and updated_at fields
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date().toISOString().slice(0, 16);
+            document.getElementById('created_at').value = now;
+            document.getElementById('updated_at').value = now;
+        });
 
-<!-- Reports Section -->
-<div id="reports" class="section" style="display: none;">
-    <h2 class="mb-4">Báo cáo thống kê</h2>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Tỷ lệ sử dụng bãi đỗ</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="usageChart" width="400" height="200"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Doanh thu theo tháng</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="revenueChart" width="400" height="200"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+        // Update status text based on checkbox
+        document.getElementById('is_active').addEventListener('change', function() {
+            const statusText = document.getElementById('status-text');
+            statusText.textContent = this.checked ? 'Đang hoạt động' : 'Tạm ngưng';
+        });
+
+        // Update preview status
+        document.getElementById('status').addEventListener('change', function() {
+            const previewStatus = document.getElementById('preview-status');
+            const statusMap = {
+                'AVAILABLE': { text: 'Có thể sử dụng', class: 'status-available' },
+                'OCCUPIED': { text: 'Đang sử dụng', class: 'status-occupied' },
+                'MAINTENANCE': { text: 'Bảo trì', class: 'status-maintenance' },
+                'RESERVED': { text: 'Đã đặt trước', class: 'status-reserved' }
+            };
+            
+            const status = statusMap[this.value];
+            previewStatus.className = `badge ${status.class}`;
+            previewStatus.textContent = status.text;
+        });
+
+        // Update preview vehicle type
+        document.getElementById('vehicle_type').addEventListener('change', function() {
+            const previewVehicle = document.getElementById('preview-vehicle');
+            const vehicleMap = {
+                'CAR': { text: 'Ô tô', icon: 'fas fa-car' },
+                'MOTORCYCLE': { text: 'Xe máy', icon: 'fas fa-motorcycle' },
+                'TRUCK': { text: 'Xe tải', icon: 'fas fa-truck' },
+                'BICYCLE': { text: 'Xe đạp', icon: 'fas fa-bicycle' }
+            };
+            
+            const vehicle = vehicleMap[this.value];
+            previewVehicle.innerHTML = `<i class="${vehicle.icon}"></i> ${vehicle.text}`;
+        });
+
+        // Form submission with toast notification
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show success toast
+            const toast = new bootstrap.Toast(document.getElementById('successToast'));
+            toast.show();
+            
+            // Here you would normally submit the form data to your backend
+            console.log('Form submitted with data:', new FormData(this));
+        });
+
+        // Reset button functionality
+        document.querySelector('button[type="reset"]').addEventListener('click', function() {
+            setTimeout(() => {
+                // Reset preview elements
+                document.getElementById('preview-status').className = 'badge status-available';
+                document.getElementById('preview-status').textContent = 'Có thể sử dụng';
+                document.getElementById('preview-vehicle').innerHTML = '<i class="fas fa-car"></i> Ô tô';
+                document.getElementById('status-text').textContent = 'Đang hoạt động';
+                
+                // Reset datetime fields
+                const now = new Date().toISOString().slice(0, 16);
+                document.getElementById('created_at').value = now;
+                document.getElementById('updated_at').value = now;
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>

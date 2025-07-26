@@ -4,6 +4,7 @@
  */
 package com.nnt.services;
 
+import com.nnt.pojo.Extension;
 import com.nnt.pojo.ParkingLot;
 import java.util.List;
 
@@ -11,14 +12,15 @@ import java.util.List;
  *
  * @author ngoct
  */
-public interface ParkingLotService {
+public interface ExtensionService {
 
-    List<ParkingLot> getParkingLots();
+    List<Extension> getExtensions();
 
-    ParkingLot getParkingLotById(int id);
+    List<Extension> getExtensionByIds(List<Integer> ids);
 
-    void addOrUpdateParkingLot(ParkingLot p, List<Integer> extensionIds);
+    Extension getExtensionById(int id);
 
-    void deleteParkingLot(int id);
+    void addOrUpdateExtension(Extension ex);
 
+    void deleteExtension(int id);
 }

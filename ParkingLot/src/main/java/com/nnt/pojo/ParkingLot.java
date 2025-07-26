@@ -86,7 +86,7 @@ public class ParkingLot implements Serializable {
         @JoinColumn(name = "extension_id", referencedColumnName = "id")})
     @ManyToMany
     private Set<Extension> extensionSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parkingLotId")
+        @OneToMany(cascade = CascadeType.ALL, mappedBy = "parkingLotId")
     private Set<ParkingSpace> parkingSpaceSet;
 
     public ParkingLot() {
@@ -214,7 +214,13 @@ public class ParkingLot implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nnt.pojo.ParkingLot[ id=" + id + " ]";
+        return "ParkingLot{"
+                + "id=" + id
+                + ", name='" + name + '\''
+                + ", address='" + address + '\''
+                + ", totalSlots=" + totalSlots
+                + ", extensionSet=" + extensionSet
+                + '}';
     }
     
 }

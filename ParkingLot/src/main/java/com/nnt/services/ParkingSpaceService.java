@@ -4,21 +4,20 @@
  */
 package com.nnt.services;
 
-import com.nnt.pojo.ParkingLot;
+import com.nnt.pojo.ParkingSpace;
 import java.util.List;
 
 /**
  *
  * @author ngoct
  */
-public interface ParkingLotService {
+public interface ParkingSpaceService {
 
-    List<ParkingLot> getParkingLots();
+    List<ParkingSpace> getParkingSpacesByParkingLotId(int id);
 
-    ParkingLot getParkingLotById(int id);
+    ParkingSpace getParkingSpaceById(int id);
 
-    void addOrUpdateParkingLot(ParkingLot p, List<Integer> extensionIds);
+    ParkingSpace addOrUpdateParkingSpace(ParkingSpace ps);
 
-    void deleteParkingLot(int id);
-
+    void deleteParkingSpace(int id);
 }

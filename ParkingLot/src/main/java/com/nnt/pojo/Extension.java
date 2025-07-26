@@ -14,10 +14,12 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -50,6 +52,9 @@ public class Extension implements Serializable {
     private String image;
     @ManyToMany(mappedBy = "extensionSet")
     private Set<ParkingLot> parkingLotSet;
+
+    @Transient //đánh dấu vùng xử lý, không liên kết xuống bata base
+    private MultipartFile file;
 
     public Extension() {
     }
@@ -120,5 +125,19 @@ public class Extension implements Serializable {
     public String toString() {
         return "com.nnt.pojo.Extension[ id=" + id + " ]";
     }
-    
+
+    /**
+     * @return the file
+     */
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
 }
