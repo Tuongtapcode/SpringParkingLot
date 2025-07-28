@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -29,31 +28,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 
 public class ExtensionServiceImpl implements ExtensionService {
-    
+
     @Autowired
     private ExtensionRepository extensionRepository;
-    
+
     @Autowired
     private ParkingLotRepository parkingLotRepository;
-    
+
     @Autowired
     private Cloudinary cloudinary;
-    
+
     @Override
     public List<Extension> getExtensions() {
         return this.extensionRepository.getExtensions();
     }
-    
+
     @Override
     public List<Extension> getExtensionByIds(List<Integer> ids) {
         return this.extensionRepository.getExtensionByIds(ids);
     }
-    
+
     @Override
     public Extension getExtensionById(int id) {
         return this.extensionRepository.getExtensionById(id);
     }
-    
+
     @Override
     public void addOrUpdateExtension(Extension ex) {
         if (!ex.getFile().isEmpty()) {
@@ -69,15 +68,15 @@ public class ExtensionServiceImpl implements ExtensionService {
                 ex.setImage(this.extensionRepository.getExtensionById(ex.getId()).getImage());
             } else {
                 ex.setImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI1ZJRoCpdYp01FkOx2Ej08IMk72EOajMkTw&s");
-                
+
             }
         }
         this.extensionRepository.addOrUpdateExtension(ex);
     }
-    
+
     @Override
     public void deleteExtension(int id) {
         this.extensionRepository.deleteExtension(id);
     }
-    
+
 }

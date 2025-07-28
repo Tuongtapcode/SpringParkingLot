@@ -5,13 +5,13 @@
 package com.nnt.pojo;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -30,17 +30,17 @@ import java.util.Set;
  * @author ngoct
  */
 @Entity
-@Table(name = "parking_space")
+@Table(name = "payment")
 @NamedQueries({
-    @NamedQuery(name = "ParkingSpace.findAll", query = "SELECT p FROM ParkingSpace p"),
-    @NamedQuery(name = "ParkingSpace.findById", query = "SELECT p FROM ParkingSpace p WHERE p.id = :id"),
-    @NamedQuery(name = "ParkingSpace.findByName", query = "SELECT p FROM ParkingSpace p WHERE p.name = :name"),
-    @NamedQuery(name = "ParkingSpace.findByStatus", query = "SELECT p FROM ParkingSpace p WHERE p.status = :status"),
-    @NamedQuery(name = "ParkingSpace.findByVehicleType", query = "SELECT p FROM ParkingSpace p WHERE p.vehicleType = :vehicleType"),
-    @NamedQuery(name = "ParkingSpace.findByIsActive", query = "SELECT p FROM ParkingSpace p WHERE p.isActive = :isActive"),
-    @NamedQuery(name = "ParkingSpace.findByCreatedAt", query = "SELECT p FROM ParkingSpace p WHERE p.createdAt = :createdAt"),
-    @NamedQuery(name = "ParkingSpace.findByUpdatedAt", query = "SELECT p FROM ParkingSpace p WHERE p.updatedAt = :updatedAt")})
-public class ParkingSpace implements Serializable {
+    @NamedQuery(name = "Payment.findAll", query = "SELECT p FROM Payment p"),
+    @NamedQuery(name = "Payment.findById", query = "SELECT p FROM Payment p WHERE p.id = :id"),
+    @NamedQuery(name = "Payment.findByMethod", query = "SELECT p FROM Payment p WHERE p.method = :method"),
+    @NamedQuery(name = "Payment.findByAmount", query = "SELECT p FROM Payment p WHERE p.amount = :amount"),
+    @NamedQuery(name = "Payment.findByTransactionId", query = "SELECT p FROM Payment p WHERE p.transactionId = :transactionId"),
+    @NamedQuery(name = "Payment.findByStatus", query = "SELECT p FROM Payment p WHERE p.status = :status"),
+    @NamedQuery(name = "Payment.findByCreatedAt", query = "SELECT p FROM Payment p WHERE p.createdAt = :createdAt"),
+    @NamedQuery(name = "Payment.findByUpdatedAt", query = "SELECT p FROM Payment p WHERE p.updatedAt = :updatedAt")})
+public class Payment implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,38 +51,45 @@ public class ParkingSpace implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
-    @Column(name = "name")
-    private String name;
+    @Column(name = "method")
+    private String method;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "amount")
+    private float amount;
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "description")
+    private String description;
+    @Size(max = 100)
+    @Column(name = "transaction_id")
+    private String transactionId;
     @Size(max = 9)
     @Column(name = "status")
     private String status;
-    @Size(max = 4)
-    @Column(name = "vehicle_type")
-    private String vehicleType;
-    @Column(name = "is_active")
-    private Boolean isActive;
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parkingSpaceId")
+    @OneToMany(mappedBy = "paymentId")
     private Set<Reservations> reservationsSet;
-    @JoinColumn(name = "parking_lot_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private ParkingLot parkingLotId;
+    private User userId;
 
-    public ParkingSpace() {
+    public Payment() {
     }
 
-    public ParkingSpace(Integer id) {
+    public Payment(Integer id) {
         this.id = id;
     }
 
-    public ParkingSpace(Integer id, String name) {
+    public Payment(Integer id, String method, float amount) {
         this.id = id;
-        this.name = name;
+        this.method = method;
+        this.amount = amount;
     }
 
     public Integer getId() {
@@ -93,12 +100,36 @@ public class ParkingSpace implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getMethod() {
+        return method;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public float getAmount() {
+        return amount;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
     public String getStatus() {
@@ -107,22 +138,6 @@ public class ParkingSpace implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getVehicleType() {
-        return vehicleType;
-    }
-
-    public void setVehicleType(String vehicleType) {
-        this.vehicleType = vehicleType;
-    }
-
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
     }
 
     public Date getCreatedAt() {
@@ -149,12 +164,12 @@ public class ParkingSpace implements Serializable {
         this.reservationsSet = reservationsSet;
     }
 
-    public ParkingLot getParkingLotId() {
-        return parkingLotId;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setParkingLotId(ParkingLot parkingLotId) {
-        this.parkingLotId = parkingLotId;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -167,10 +182,10 @@ public class ParkingSpace implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ParkingSpace)) {
+        if (!(object instanceof Payment)) {
             return false;
         }
-        ParkingSpace other = (ParkingSpace) object;
+        Payment other = (Payment) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -179,7 +194,7 @@ public class ParkingSpace implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nnt.pojo.ParkingSpace[ id=" + id + " ]";
+        return "com.nnt.pojo.Payment[ id=" + id + " ]";
     }
     
 }

@@ -8,15 +8,16 @@
     z-index: 1000;
 }
 
-.nav-link {
+
+.sidebar .nav-link {
     color: white !important;
     border-radius: 10px;
     margin: 5px 0;
     transition: all 0.3s;
 }
 
-.nav-link:hover,
-.nav-link.active {
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
     background: rgba(255, 255, 255, 0.2);
     transform: translateX(5px);
 }
@@ -24,6 +25,10 @@
 .main-content {
     margin-left: 250px;
 }
+
+/* navbar styles */
+
+
 
 
 /* Parking Lot detail */

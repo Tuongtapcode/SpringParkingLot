@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -50,6 +51,10 @@ public class Extension implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "image")
     private String image;
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "description")
+    private String description;
     @ManyToMany(mappedBy = "extensionSet")
     private Set<ParkingLot> parkingLotSet;
 
@@ -91,6 +96,14 @@ public class Extension implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Set<ParkingLot> getParkingLotSet() {

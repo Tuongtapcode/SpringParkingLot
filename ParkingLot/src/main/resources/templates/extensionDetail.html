@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -46,7 +46,12 @@
                                         <input th:field="*{name}" type="text" class="form-control" id="name" name="name"
                                             required maxlength="200">
                                     </div>
-
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Mô tả<span
+                                                class="text-danger">*</span></label>
+                                        <input th:field="*{description}" type="text" class="form-control"
+                                            id="description" name="description" required maxlength="200">
+                                    </div>
                                     <!-- <div class="mb-3">
                                         <label for="description" class="form-label">Mô tả</label>
                                         <textarea th:field="*{description}" class="form-control" id="description"

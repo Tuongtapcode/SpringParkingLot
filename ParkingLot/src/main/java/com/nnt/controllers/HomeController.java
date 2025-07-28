@@ -4,6 +4,8 @@
  */
 package com.nnt.controllers;
 
+import com.nnt.services.StatsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HomeController {
 
-    
+    @Autowired
+    private StatsService statsService;
+
     @RequestMapping("/")
     public String index(Model model) {
         model.addAttribute("activePage", "dashboard");
+        model.addAttribute("totalPL", this.statsService.totalParkingLot());
+        model.addAttribute("totalPS", this.statsService.totalParkingSpace());
+        model.addAttribute("availablePSp", this.statsService.availableParkingSpace());
+        model.addAttribute("rvThisMonth", this.statsService.revenueThisMonth());
+
         return "index";
     }
 }
