@@ -4,6 +4,8 @@
  */
 package com.nnt.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -67,11 +69,13 @@ public class ParkingSpace implements Serializable {
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parkingSpaceId")
-    private Set<Reservations> reservationsSet;
     @JoinColumn(name = "parking_lot_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
+    @JsonIgnoreProperties({"parkingSpaces"})
     private ParkingLot parkingLotId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parkingSpaceId")
+    @JsonIgnore
+    private Set<Reservation> reservationSet;
 
     public ParkingSpace() {
     }
@@ -141,20 +145,20 @@ public class ParkingSpace implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public Set<Reservations> getReservationsSet() {
-        return reservationsSet;
-    }
-
-    public void setReservationsSet(Set<Reservations> reservationsSet) {
-        this.reservationsSet = reservationsSet;
-    }
-
     public ParkingLot getParkingLotId() {
         return parkingLotId;
     }
 
     public void setParkingLotId(ParkingLot parkingLotId) {
         this.parkingLotId = parkingLotId;
+    }
+
+    public Set<Reservation> getReservationSet() {
+        return reservationSet;
+    }
+
+    public void setReservationSet(Set<Reservation> reservationSet) {
+        this.reservationSet = reservationSet;
     }
 
     @Override
@@ -181,5 +185,5 @@ public class ParkingSpace implements Serializable {
     public String toString() {
         return "com.nnt.pojo.ParkingSpace[ id=" + id + " ]";
     }
-    
+
 }

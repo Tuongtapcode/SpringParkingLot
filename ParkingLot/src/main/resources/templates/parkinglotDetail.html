@@ -31,7 +31,8 @@
                             </h3>
                         </div>
                         <div class="card-body">
-                            <form th:action="@{/parkinglots}" method="post" th:object="${parkinglot}">
+                            <form th:action="@{/parkinglots}" method="post" th:object="${parkinglot}"
+                                enctype="multipart/form-data">
                                 <!-- Thông tin cơ bản -->
                                 <div class="form-section">
                                     <h5 class="text-primary mb-3">
@@ -59,7 +60,22 @@
                                             placeholder="Mô tả chi tiết về bãi đỗ xe..."></textarea>
                                     </div>
                                 </div>
-
+                                <!-- Hình ảnh -->
+                                <div class="form-section">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-image me-2"></i>
+                                        Hình ảnh bãi đỗ
+                                    </h5>
+                                    <div class="mb-3">
+                                        <label for="image" class="form-label">Chọn hình ảnh</label>
+                                        <input th:field="*{file}" type="file" class="form-control" id="image"
+                                            name="image" placeholder="URL hình ảnh hoặc tải lên" accept="image/*">
+                                    </div>
+                                    <div class="mb-3" th:if="${parkinglot.image != null}">
+                                        <img th:src="${parkinglot.image}" class="img-fluid" alt="Hình ảnh tiện ích"
+                                            style="max-height: 300px; object-fit: cover;">
+                                    </div>
+                                </div>
                                 <!-- Thông tin vận hành -->
                                 <div class="form-section">
                                     <h5 class="text-primary mb-3">

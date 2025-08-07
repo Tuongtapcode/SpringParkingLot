@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author ngoct
  */
-@RestController // RESTful web controller — tức là nó sẽ trả dữ liệu (thường là JSON/XML)
-@RequestMapping("/api") // Tạo prefix chung cho tất cả method bên trong class.
-@CrossOrigin //Cho phép truy cập từ nguồn khác 
+@RestController
+@RequestMapping("/api")
+@CrossOrigin
 public class ApiExtensionController {
 
     @Autowired

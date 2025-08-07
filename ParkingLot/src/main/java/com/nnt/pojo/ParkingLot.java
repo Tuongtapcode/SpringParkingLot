@@ -4,10 +4,13 @@
  */
 package com.nnt.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,11 +24,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -38,6 +43,7 @@ import java.util.Set;
     @NamedQuery(name = "ParkingLot.findById", query = "SELECT p FROM ParkingLot p WHERE p.id = :id"),
     @NamedQuery(name = "ParkingLot.findByName", query = "SELECT p FROM ParkingLot p WHERE p.name = :name"),
     @NamedQuery(name = "ParkingLot.findByAddress", query = "SELECT p FROM ParkingLot p WHERE p.address = :address"),
+    @NamedQuery(name = "ParkingLot.findByImage", query = "SELECT p FROM ParkingLot p WHERE p.image = :image"),
     @NamedQuery(name = "ParkingLot.findByTotalSlots", query = "SELECT p FROM ParkingLot p WHERE p.totalSlots = :totalSlots"),
     @NamedQuery(name = "ParkingLot.findByPricePerHour", query = "SELECT p FROM ParkingLot p WHERE p.pricePerHour = :pricePerHour"),
     @NamedQuery(name = "ParkingLot.findByIsActive", query = "SELECT p FROM ParkingLot p WHERE p.isActive = :isActive"),
@@ -63,6 +69,11 @@ public class ParkingLot implements Serializable {
     private String address;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 200)
+    @Column(name = "image")
+    private String image;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "total_slots")
     private int totalSlots;
     @Basic(optional = false)
@@ -84,10 +95,16 @@ public class ParkingLot implements Serializable {
     @JoinTable(name = "parkinglot_extension", joinColumns = {
         @JoinColumn(name = "parkinglot_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "extension_id", referencedColumnName = "id")})
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER) //ĐÁNH DẤU EAGER
+    @JsonIgnoreProperties("parkingLotSet")
     private Set<Extension> extensionSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parkingLotId")
+    @JsonIgnore
     private Set<ParkingSpace> parkingSpaceSet;
+
+    @Transient
+    @JsonIgnore
+    private MultipartFile file;
 
     public ParkingLot() {
     }
@@ -96,10 +113,11 @@ public class ParkingLot implements Serializable {
         this.id = id;
     }
 
-    public ParkingLot(Integer id, String name, String address, int totalSlots, float pricePerHour) {
+    public ParkingLot(Integer id, String name, String address, String image, int totalSlots, float pricePerHour) {
         this.id = id;
         this.name = name;
         this.address = address;
+        this.image = image;
         this.totalSlots = totalSlots;
         this.pricePerHour = pricePerHour;
     }
@@ -126,6 +144,14 @@ public class ParkingLot implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public int getTotalSlots() {
@@ -216,5 +242,19 @@ public class ParkingLot implements Serializable {
     public String toString() {
         return "com.nnt.pojo.ParkingLot[ id=" + id + " ]";
     }
-    
+
+    /**
+     * @return the file
+     */
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
 }

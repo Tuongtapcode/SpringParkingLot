@@ -7,6 +7,7 @@ package com.nnt.controllers;
 import com.nnt.pojo.ParkingSpace;
 import com.nnt.services.ParkingLotService;
 import com.nnt.services.ParkingSpaceService;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,9 +32,9 @@ public class ParkingSpaceController {
     private ParkingLotService parkingLotService;
 
     @GetMapping("/parkingspaces")
-    public String ListParkingSpaces(Model model, @RequestParam(value = "lotId", required = false, defaultValue = "1") int lotId) {
+    public String ListParkingSpaces(Model model, @RequestParam(value = "lotId", required = false, defaultValue = "0") int lotId) {
         model.addAttribute("activePage", "parkingspaces");
-        model.addAttribute("parkinglots", this.parkingLotService.getParkingLots());
+        model.addAttribute("parkinglots", this.parkingLotService.getParkingLots(Collections.emptyMap()));
         model.addAttribute("parkingSpaces", this.parkingSpaceService.getParkingSpacesByParkingLotId(lotId));
         model.addAttribute("selectedLotId", lotId);
         return "parkingspaces";
@@ -43,7 +44,7 @@ public class ParkingSpaceController {
     public String updateParkinglot(Model model, @PathVariable(value = "parkingspaceId") int id) {
         model.addAttribute("activePage", "parkingspaces");
         model.addAttribute("parkingspace", this.parkingSpaceService.getParkingSpaceById(id));
-        model.addAttribute("parkinglots", this.parkingLotService.getParkingLots());
+        model.addAttribute("parkinglots", this.parkingLotService.getParkingLots(Collections.emptyMap()));
         return "parkingspaceDetail";
     }
 
@@ -53,13 +54,11 @@ public class ParkingSpaceController {
         return "redirect:/parkingspaces";
     }
 
-    //Thêm chỗ đỗ 
     @GetMapping("/parkingspaces/add")
     public String addParkinglot(Model model) {
-        model.addAttribute("parkinglots", this.parkingLotService.getParkingLots());
+        model.addAttribute("parkinglots", this.parkingLotService.getParkingLots(Collections.emptyMap()));
         model.addAttribute("parkingspace", new ParkingSpace());
         return "parkingspaceDetail";
     }
-    
-    
+
 }

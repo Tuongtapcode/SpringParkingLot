@@ -170,24 +170,24 @@
 <body>
     <div class="login-container">
         <div class="login-card">
-            <!-- Header -->
+ 
             <div class="login-header">
                 <i class="fas fa-car"></i>
                 <h3 class="mb-0">Quản trị Bãi Xe</h3>
                 <p class="mb-0 mt-2 opacity-75">Đăng nhập để tiếp tục</p>
             </div>
 
-            <!-- Body -->
+  
             <div class="login-body">
-                <!-- Alert thông báo lỗi (ẩn mặc định) -->
+
                 <div class="alert alert-danger d-none" id="errorAlert" role="alert">
                     <i class="fas fa-exclamation-triangle me-2"></i>
                     <span id="errorMessage">Tên đăng nhập hoặc mật khẩu không đúng!</span>
                 </div>
 
-                <!-- Form đăng nhập -->
+
                 <form id="loginForm" th:action="@{/login}" method="post">
-                    <!-- Username -->
+   
                     <div class="form-floating">
                         <input type="text" class="form-control" id="username" name="username"
                             placeholder="Tên đăng nhập" required>
@@ -196,7 +196,7 @@
                         </label>
                     </div>
 
-                    <!-- Password -->
+   
                     <div class="form-floating">
                         <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu"
                             required>
@@ -205,7 +205,7 @@
                         </label>
                     </div>
 
-                    <!-- Điều khoản sử dụng & Forgot password -->
+
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="terms" name="terms" checked required>
@@ -217,7 +217,7 @@
                         <a href="#" class="forgot-password">Quên mật khẩu?</a>
                     </div>
 
-                    <!-- Submit button -->
+                 
                     <button type="submit" class="btn btn-primary btn-login">
                         <i class="fas fa-sign-in-alt me-2"></i>
                         Đăng nhập
@@ -225,7 +225,7 @@
                 </form>
             </div>
 
-            <!-- Footer -->
+
             <div class="login-footer">
                 <small>
                     <i class="fas fa-shield-alt me-1"></i>

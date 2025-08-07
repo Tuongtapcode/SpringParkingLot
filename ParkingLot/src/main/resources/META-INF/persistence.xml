@@ -5,8 +5,10 @@
     <class>com.nnt.pojo.Extension</class>
     <class>com.nnt.pojo.ParkingLot</class>
     <class>com.nnt.pojo.ParkingSpace</class>
-    <class>com.nnt.pojo.User</class>
     <class>com.nnt.pojo.Payment</class>
     <class>com.nnt.pojo.Reservations</class>
+    <class>com.nnt.pojo.Vehicle</class>
+    <class>com.nnt.pojo.User</class>
+    <class>com.nnt.pojo.Reservation</class>
   </persistence-unit>
 </persistence>

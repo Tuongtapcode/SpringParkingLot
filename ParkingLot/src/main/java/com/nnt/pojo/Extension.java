@@ -4,6 +4,7 @@
  */
 package com.nnt.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,7 +58,7 @@ public class Extension implements Serializable {
     private String description;
     @ManyToMany(mappedBy = "extensionSet")
     private Set<ParkingLot> parkingLotSet;
-
+    @JsonIgnore
     @Transient //đánh dấu vùng xử lý, không liên kết xuống bata base
     private MultipartFile file;
 

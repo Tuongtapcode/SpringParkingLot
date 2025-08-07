@@ -18,37 +18,252 @@
     <div class="main-content">
         <!-- Navbar -->
         <div th:replace="base :: navbar"></div>
-        <!-- Dashboard Section -->
-        <!-- Reports Section -->
+
+
         <div id="reports" class="section container mt-4">
-            <h2 class="mb-4">Báo cáo thống kê</h2>
-            <div class="row">
-                <div class="col-md-6">
+            <h1 class="mb-4 text-danger text-center">BÁO CÁO THỐNG KÊ</h1>
+            <div class="row pb-3">
+                <form id="lotForm" method="get" th:action="@{/stats}">
+                    <div class="row g-3 justify-content-center align-items-end">
+
+                        <div class="col-md-3">
+                            <label for="month" class="form-label">Chọn thời gian</label>
+                            <select name="month" id="month" class="form-select">
+                                <option value="MONTH">Theo tháng</option>
+                                <option value="QUARTER">Theo quý</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="year" class="form-label">Chọn năm</label>
+                            <input name="year" type="number" value="2025" id="year" class="form-control"
+                                placeholder="Nhập năm..." />
+                        </div>
+
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">Xem thống kê</button>
+                        </div>
+
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success w-100" onclick="window.print()">In báo
+                                cáo</button>
+                        </div>
+                    </div>
+                </form> 
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-5">
                     <div class="card">
                         <div class="card-header">
-                            <h5>Tỷ lệ sử dụng bãi đỗ</h5>
+                            <h5>Bảng doanh thu theo thời gian</h5>
                         </div>
                         <div class="card-body">
-                            <canvas id="usageChart" width="400" height="200"></canvas>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Thời gian</th>
+                                            <th>Doanh thu</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="p: ${statsRevenueParkingLotByTime}">
+                                            <td th:text="${p[0]}"></td>
+                                            <td th:text="${p[1] + ' VNĐ'}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <div class="card">
                         <div class="card-header">
-                            <h5>Doanh thu theo tháng</h5>
+                            <h5>Biểu đồ doanh thu theo thời gian</h5>
                         </div>
                         <div class="card-body">
-                            <canvas id="revenueChart" width="400" height="200"></canvas>
+                            <canvas id="revenueParkingLotByTime" width="400" height="200"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="row mt-3">
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Bảng doanh thu theo bãi đỗ</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên bãi đỗ</th>
+                                            <th>Doanh thu</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="p: ${statsRevenueParkingLot}">
+                                            <td th:text="${p[0]}"></td>
+                                            <td th:text="${p[1]}"></td>
+                                            <td th:text="${p[2] + ' VNĐ'}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Biểu đồ doanh thu theo bãi đỗ</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenueParkingLot" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
 
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/js/main.js}"></script>
+            </div>
+
+
+
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script th:src="@{/js/main.js}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script th:inline="javascript">
+
+
+            window.onload = function () {
+                let stats = [[${ statsRevenueParkingLot }]];
+                let data = stats.map(o => o[2]);
+                let labels = stats.map(o => o[1]);
+
+                const ctx2 = document.getElementById('revenueParkingLotByTime');
+                const ctx = document.getElementById('revenueParkingLot');
+
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Votes',
+                            data: data,
+                            backgroundColor: [
+                                '#FFB6C1',
+                                '#87CEEB',
+                                '#F0E68C',
+                                '#20B2AA',
+                                '#DDA0DD',
+                                '#F4A460',
+                                '#FA8072',
+                                '#98FB98',
+                                '#87CEFA'
+                            ],
+                            borderColor: [
+                                '#FFB6C1',
+                                '#87CEEB',
+                                '#F0E68C',
+                                '#20B2AA',
+                                '#DDA0DD',
+                                '#F4A460',
+                                '#FA8072',
+                                '#98FB98',
+                                '#87CEFA'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        const sum = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((context.parsed * 100) / sum).toFixed(1);
+                                        label += context.parsed + ' (' + percentage + '%)';
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                let stats2 = [[${ statsRevenueParkingLotByTime }]];
+                let data2 = stats2.map(o => o[1]);
+                console.log("data2", data2)
+                let labels2 = stats2.map(o => o[0]);
+                console.log("Label2", labels2)
+                new Chart(ctx2, {
+                    type: 'line',
+                    data: {
+                        labels: labels2,
+                        datasets: [{
+                            label: 'Thời gian',
+                            data: data2,
+                            backgroundColor: [
+                                '#FFB6C1',
+                                '#87CEEB',
+                                '#F0E68C',
+                                '#20B2AA',
+                                '#DDA0DD',
+                                '#F4A460',
+                                '#FA8072',
+                                '#98FB98',
+                                '#87CEFA'
+                            ],
+                            borderColor: [
+                                '#FFB6C1',
+                                '#87CEEB',
+                                '#F0E68C',
+                                '#20B2AA',
+                                '#DDA0DD',
+                                '#F4A460',
+                                '#FA8072',
+                                '#98FB98',
+                                '#87CEFA'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        const sum = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((context.parsed * 100) / sum).toFixed(1);
+                                        label += context.parsed + ' (' + percentage + '%)';
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+        </script>
 </body>
 
 </html>

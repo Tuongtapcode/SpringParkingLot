@@ -5,7 +5,9 @@
 package com.nnt.repositories;
 
 import com.nnt.pojo.ParkingSpace;
+import com.nnt.pojo.ParkingSpaceResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -16,6 +18,8 @@ public interface ParkingSpaceRepository {
     List<ParkingSpace> getParkingSpacesByParkingLotId(int id);
 
     ParkingSpace getParkingSpaceById(int id);
+
+    List<ParkingSpaceResponse> getListParkingSpace(Map<String, String> params);
 
     ParkingSpace addOrUpdateParkingSpace(ParkingSpace ps);
 

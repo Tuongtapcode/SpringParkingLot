@@ -5,7 +5,9 @@
 package com.nnt.services;
 
 import com.nnt.pojo.ParkingSpace;
+import com.nnt.pojo.ParkingSpaceResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -14,6 +16,8 @@ import java.util.List;
 public interface ParkingSpaceService {
 
     List<ParkingSpace> getParkingSpacesByParkingLotId(int id);
+
+    List<ParkingSpaceResponse> getListParkingSpace(Map<String, String> params);
 
     ParkingSpace getParkingSpaceById(int id);
 

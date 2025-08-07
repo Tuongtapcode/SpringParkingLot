@@ -6,6 +6,7 @@ package com.nnt.configs;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,6 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  *
@@ -42,15 +46,12 @@ public class SpringSecurityConfigs {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(c -> c.disable())
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(c -> c.disable())
                 .authorizeHttpRequests(requests -> requests
-                // Cho phép truy cập tĩnh
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/static/**").permitAll()
-                // API cho phép GET, nhưng POST cần xác thực
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/**").authenticated()
-                // Các trang cần đăng nhập
-                .requestMatchers("/", "/parkinglots/**", "/parkingspaces/**", "/extensions/**", "/stats").hasRole("ADMIN") // cần quyền ADMIN
+                .requestMatchers("/", "/parkinglots/**", "/parkingspaces/**", "/extensions/**", "/stats").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
@@ -81,5 +82,20 @@ public class SpringSecurityConfigs {
                         "api_secret", "JdsaVdMKR25NG7w-VRIBB7H2WXk",
                         "secure", true));
         return cloudinary;
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setExposedHeaders(List.of("Authorization"));
+        config.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
     }
 }

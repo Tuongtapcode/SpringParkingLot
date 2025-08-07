@@ -6,6 +6,7 @@ package com.nnt.services.impl;
 
 import com.nnt.repositories.StatsRepository;
 import com.nnt.services.StatsService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,8 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public long availableParkingSpace() {
-        return this.statsRepository.availableParkingSpace();
+    public long blockedParkingSpace() {
+        return this.statsRepository.blockedParkingSpace();
     }
 
     @Override
@@ -39,4 +40,13 @@ public class StatsServiceImpl implements StatsService {
         return this.statsRepository.revenueThisMonth();
     }
 
+    @Override
+    public List<Object[]> statsRevenueByParkingLot() {
+        return this.statsRepository.statsRevenueByParkingLot();
+    }
+
+    @Override
+    public List<Object[]> statsRevenueByTime(String time, int year) {
+        return this.statsRepository.statsRevenueByTime(time, year);
+    }
 }

@@ -4,6 +4,7 @@
  */
 package com.nnt.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,10 +16,12 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -29,7 +32,8 @@ import java.util.Set;
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
     @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
-    @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.name = :name"),
+    @NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName"),
+    @NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lastName = :lastName"),
     @NamedQuery(name = "User.findByPhone", query = "SELECT u FROM User u WHERE u.phone = :phone"),
     @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
     @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
@@ -48,15 +52,18 @@ public class User implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
-    @Column(name = "name")
-    private String name;
-    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Column(name = "first_name")
+    private String firstName;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "last_name")
+    private String lastName;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "phone")
     private String phone;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -77,13 +84,22 @@ public class User implements Serializable {
     private String avatar;
     @Column(name = "active")
     private Boolean active;
-    @Size(max = 5)
+    @Size(max = 10)
     @Column(name = "role")
     private String role;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<Reservations> reservationsSet;
+    @JsonIgnore
+    private Set<Reservation> reservationSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @JsonIgnore
     private Set<Payment> paymentSet;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private Set<Vehicle> vehicleSet;
+
+    @Transient
+    @JsonIgnore
+    private MultipartFile file;
 
     public User() {
     }
@@ -92,9 +108,10 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public User(Integer id, String name, String phone, String email, String username, String password) {
+    public User(Integer id, String firstName, String lastName, String phone, String email, String username, String password) {
         this.id = id;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phone = phone;
         this.email = email;
         this.username = username;
@@ -109,12 +126,20 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPhone() {
@@ -173,12 +198,12 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    public Set<Reservations> getReservationsSet() {
-        return reservationsSet;
+    public Set<Reservation> getReservationSet() {
+        return reservationSet;
     }
 
-    public void setReservationsSet(Set<Reservations> reservationsSet) {
-        this.reservationsSet = reservationsSet;
+    public void setReservationSet(Set<Reservation> reservationSet) {
+        this.reservationSet = reservationSet;
     }
 
     public Set<Payment> getPaymentSet() {
@@ -187,6 +212,14 @@ public class User implements Serializable {
 
     public void setPaymentSet(Set<Payment> paymentSet) {
         this.paymentSet = paymentSet;
+    }
+
+    public Set<Vehicle> getVehicleSet() {
+        return vehicleSet;
+    }
+
+    public void setVehicleSet(Set<Vehicle> vehicleSet) {
+        this.vehicleSet = vehicleSet;
     }
 
     @Override
@@ -213,5 +246,19 @@ public class User implements Serializable {
     public String toString() {
         return "com.nnt.pojo.User[ id=" + id + " ]";
     }
-    
+
+    /**
+     * @return the file
+     */
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
 }

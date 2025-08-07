@@ -4,6 +4,7 @@
  */
 package com.nnt.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,7 +57,7 @@ public class Payment implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "amount")
-    private float amount;
+    private double amount;
     @Lob
     @Size(max = 65535)
     @Column(name = "description")
@@ -74,7 +75,8 @@ public class Payment implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
     @OneToMany(mappedBy = "paymentId")
-    private Set<Reservations> reservationsSet;
+    @JsonIgnore
+    private Set<Reservation> reservationSet;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User userId;
@@ -86,7 +88,7 @@ public class Payment implements Serializable {
         this.id = id;
     }
 
-    public Payment(Integer id, String method, float amount) {
+    public Payment(Integer id, String method, double amount) {
         this.id = id;
         this.method = method;
         this.amount = amount;
@@ -108,11 +110,11 @@ public class Payment implements Serializable {
         this.method = method;
     }
 
-    public float getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -156,12 +158,12 @@ public class Payment implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public Set<Reservations> getReservationsSet() {
-        return reservationsSet;
+    public Set<Reservation> getReservationSet() {
+        return reservationSet;
     }
 
-    public void setReservationsSet(Set<Reservations> reservationsSet) {
-        this.reservationsSet = reservationsSet;
+    public void setReservationSet(Set<Reservation> reservationSet) {
+        this.reservationSet = reservationSet;
     }
 
     public User getUserId() {
@@ -196,5 +198,5 @@ public class Payment implements Serializable {
     public String toString() {
         return "com.nnt.pojo.Payment[ id=" + id + " ]";
     }
-    
+
 }

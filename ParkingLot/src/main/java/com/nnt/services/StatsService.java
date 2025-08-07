@@ -4,6 +4,8 @@
  */
 package com.nnt.services;
 
+import java.util.List;
+
 /**
  *
  * @author ngoct
@@ -14,7 +16,11 @@ public interface StatsService {
 
     long totalParkingSpace();
 
-    long availableParkingSpace();
+    long blockedParkingSpace();
 
     double revenueThisMonth();
+
+    List<Object[]> statsRevenueByParkingLot();
+
+    List<Object[]> statsRevenueByTime(String time, int year);
 }

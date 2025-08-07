@@ -8,6 +8,7 @@ import com.nnt.pojo.ParkingLot;
 import com.nnt.services.ExtensionService;
 import com.nnt.services.ParkingLotService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,9 +32,9 @@ public class ParkingLotController {
     private ExtensionService extensionService;
 
     @GetMapping("/parkinglots")
-    public String ListParkingLots(Model model) {
+    public String ListParkingLots(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("activePage", "parkinglots");
-        model.addAttribute("parkinglots", this.parkingLotService.getParkingLots());
+        model.addAttribute("parkinglots", this.parkingLotService.getParkingLots(params));
         return "parkinglots";
     }
 

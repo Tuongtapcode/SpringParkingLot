@@ -6,6 +6,7 @@ package com.nnt.repositories;
 
 import com.nnt.pojo.ParkingLot;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface ParkingLotRepository {
 
-    public List<ParkingLot> getParkingLots();
+    public List<ParkingLot> getParkingLots(Map<String, String> params);
 
     ParkingLot getParkingLotById(int id);
 

@@ -40,6 +40,7 @@
                                         <th>Địa chỉ</th>
                                         <th>Tổng chỗ</th>
                                         <th>Giá/giờ</th>
+                                        <th>Hình ảnh</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th>
                                     </tr>
@@ -51,7 +52,9 @@
                                         <td th:text="${p.address}"></td>
                                         <td th:text="${p.totalSlots}"></td>
                                         <td th:text="${p.pricePerHour}"></td>
-
+                                        <td> <img th:src="${p.image}" alt="Hình ảnh bãi xe"
+                                                style="max-height: 100px; object-fit: cover;">
+                                        </td>
                                         <td>
                                             <span th:if="${p.isActive}" class="badge bg-success">Hoạt động</span>
                                             <span th:if="${!p.isActive}" class="badge bg-danger">Ngừng hoạt động</span>

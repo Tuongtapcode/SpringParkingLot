@@ -45,11 +45,5 @@ public class WebAppContextConfigs implements WebMvcConfigurer {
     public StandardServletMultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
     }
-    //Formatter
-//    @Override
-//    public void addFormatters(FormatterRegistry registry) {
-//        registry.addFormatter(new ParkingLotFormatter());
-//    }
-  
 
 }

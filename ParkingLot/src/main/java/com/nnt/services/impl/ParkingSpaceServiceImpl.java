@@ -5,9 +5,11 @@
 package com.nnt.services.impl;
 
 import com.nnt.pojo.ParkingSpace;
+import com.nnt.pojo.ParkingSpaceResponse;
 import com.nnt.repositories.ParkingSpaceRepository;
 import com.nnt.services.ParkingSpaceService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,11 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     @Override
     public void deleteParkingSpace(int id) {
         this.parkingSpaceRepository.deleteParkingSpace(id);
+    }
+
+    @Override
+    public List<ParkingSpaceResponse> getListParkingSpace(Map<String, String> params) {
+        return this.parkingSpaceRepository.getListParkingSpace(params);
     }
 
 }

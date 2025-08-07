@@ -25,7 +25,7 @@ public class HomeController {
         model.addAttribute("activePage", "dashboard");
         model.addAttribute("totalPL", this.statsService.totalParkingLot());
         model.addAttribute("totalPS", this.statsService.totalParkingSpace());
-        model.addAttribute("availablePSp", this.statsService.availableParkingSpace());
+        model.addAttribute("availablePSp", this.statsService.blockedParkingSpace());
         model.addAttribute("rvThisMonth", this.statsService.revenueThisMonth());
 
         return "index";
